@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input, select {
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            margin-top: 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calorie Prediction</h1>
+        <form id="prediction-form">
+            <label for="User_ID">User ID:</label>
+            <input type="number" id="User_ID" name="User_ID" required><br>
+            
+            <label for="Gender">Gender:</label>
+            <select id="Gender" name="Gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select><br>
+            
+            <label for="Age">Age:</label>
+            <input type="number" id="Age" name="Age" required><br>
+            
+            <label for="BodyTemp">Body Temperature:</label>
+            <input type="number" step="0.1" id="BodyTemp" name="BodyTemp" required><br>
+            
+            <label for="HeartRate">Heart Rate:</label>
+            <input type="number" id="HeartRate" name="HeartRate" required><br>
+            
+            <label for="Weight">Weight (kg):</label>
+            <input type="number" step="0.1" id="Weight" name="Weight" required><br>
+            
+            <label for="Height">Height (cm):</label>
+            <input type="number" id="Height" name="Height" required><br>
+            
+            <label for="Duration">Duration (min):</label>
+            <input type="number" id="Duration" name="Duration" required><br>
+            
+            <input type="submit" value="Predict">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('result').innerHTML = `<h2>Calories Burned: ${result['Calories Burned']}</h2>`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
